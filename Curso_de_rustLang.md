@@ -113,3 +113,30 @@ fn minha_func(x: u8) -> i32 {
 - O sublinhado antes de um nome de variável é uma convenção para indicar que a variável não é usada. A palavra-chave <b>"as"</b> afirma o tipo da expressão, desde que a conversão de tipo seja válida.
 
 ---
+
+#### Strings e Slices em Rust
+
+- Um ponto em comum que confunde os novatos <b>Rustacians</b>, é a diferenca entre <b>Strings</b> e o tipo <b>str</b>.
+
+<b>EX:</b>
+
+```rs
+let meu_str: &str = "Ola mundo!";
+
+let minha_string: String = String::from("Ola Mundo!");
+```
+- No exemplo acima, <b>meu_str</b> é uma referencia para uma <b>String</b> literal, e <b>minha_string</b> é uma instacia da <b>String</b>.
+- Uma distinção importante entre elas é que <b>meu_str</b> é armazenada em pilha e <b>minha_string</b> é alocada em pilha. Isso significa que o valor de <b>meu_str</b> não pode mudar e seu tamanho e fixo, enquanto <b>minha_string</b> pode ter um tamanho desconhecido em tempo de compilação.
+- A <b>String</b> literal tambem e conhecida como fatia de string. Isso ocorre porque um <b>&str</b> se refere a parte de uma string. Geralmente, é assim que <b>arrays</b> e <b>Strrings</b> assemelham-se.
+
+<b>EX:</b>
+
+```rs
+let minha_string = String::from("The quick brown fox");
+let meu_str: &str = &minha_string[4..9]; //"Rapido"
+
+let meu_arr: [usize; 5] = [1,2,3,4,5];
+let meu_arr_fatiado: &[usize] = &meu_arr[0..3]; // [1,2,3]
+```
+
+- O <b>[T; n]</b> é usado para criar um array de <b>n</b> elementos de tipo <b>T</b>.
