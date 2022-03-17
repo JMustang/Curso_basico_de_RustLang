@@ -171,3 +171,54 @@ let colecao_de_chars: &str = meu_str.chars().as_str();
 - Inteiros declarado, representam números inteiros positivos e negativos.
 - Float representam apenas frações positivas e negativas.
 ---
+
+#### Structs no Rust
+
+- Um <b>Struct </b> é um tipo de dados personalizado usado para agrupar dados  relacionados. Você já encontrou um struct na seção <b>Strings e Slices</b>:
+
+<b>EX:</b>
+
+```rs
+struct String {
+  vec: Vec<u8>,
+}
+```
+
+- A <b>String struct</b> consiste em um campo <b>vec</b>, que é um <b>Vec</b> de u8s. O <b>Vec</b> é um array de tamanho dinâmico.
+
+- Uma instância de um struct é então declarada dando valores aos campos:
+<b>EX:</b>
+
+```rs
+struct MeuStruct {
+  field_1: u8,
+}
+
+let meu_struct = MeuStruct { field_1: 0, };
+```
+- Anteriormente, a <b>struct String</b> era usado com sua função <b>from</b> para criar uma <b>String</b> a partir de um &str. Isso é possivel porque a função <b>from</b> é implementada para a <b>String</b>:
+
+<b>EX:</b>
+
+```rs
+iml String {
+  fn from(s: &str) -> self {
+    String {
+      vec: Vec::from(s.as_bytes()),
+    }
+  }
+}
+```
+
+- Você usa a palavra-chave <b>Self</b> no lugar do tipo da <b>struct</b>.
+
+Os <b>structs</b> também podem ter outras variantes:
+
+<b>EX:</b>
+
+```rs
+struct MinhaUnidadeStruct;
+struct MinhaTuplesStruct(u8, u8);
+```
+
+---
