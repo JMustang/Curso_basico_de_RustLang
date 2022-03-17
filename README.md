@@ -222,3 +222,70 @@ struct MinhaTuplesStruct(u8, u8);
 ```
 
 ---
+#### Enums em Rust
+- Semelhante a outras linguagens, enums são úteis para atuar como tipos e valores.
+
+<b>EX:</b>
+
+```rs
+enum meusErros {
+  CabecaCansada,
+  TimeOfDay(String)
+  SemCafe,
+}
+
+fn work() -> Result<(), meusErros> { // Result também é um enum
+  if state == "Faltando ponto-e-vírgula" {
+    Err(meusErros::CabecaCansada)
+  } else if state == "06:00" {
+    Err(meusErros::TimeOfDay("é muito cedo para trabalhar".to_string()))
+  } else if state == "22:00" {
+    Err(meusErros::TimeOfDay("é muito tarde para trabalhar".to_string()))
+  } else if state == "vaziu" {
+    Err(meusErros::SemCafe)
+  } else {
+    ok(())
+  }
+}
+```
+
+---
+
+#### Macros em Rust
+- Um macro é semelhante a uma função, mas você pode pensar nela como um pedaço de código que escreve outro código. Por enquanto, as principais diferenças entre uma função e uma macro a serem lembradas são:
+
+1. As macros são chamadas usando um bang (!).
+2. Macros podem receber um número variável de argumentos, enquanto funções em Rust não podem.
+
+- Uma das macros mais comuns é a println! macro, que imprime no console:
+
+<b>EX:</b>
+
+```rs
+let meu_str = "Ola, Mundo!";
+println!("{}", meu_str);
+```
+- Você usa a sintaxe <b>{}</b> para inserir uma variável em uma string.
+
+- Outra macro comum é o <b>panic!</b>. Entrar em pânico é a maneira de Rust 'errar'. É sábio pensar em um <b>panic!</b> em <b>Rust</b> como um erro mal tratado. A macro aceita um literal de string e entra em pânico com essa mensagem.
+
+<b>EX:</b>
+
+```rs
+let eu_sou_um_erro = true;
+
+if (eu_sou_um_erro) {
+  panic!("Existe um erro");
+}
+```
+
+```zsh 
+# cargo é o NPM (package manage) do Rust
+$ cargo run
+   Compiling fcc-rust-in-replit v0.1.0 (/home/runner/Rust-in-Replit)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.66s
+     Running `target/debug/calculator`
+thread 'main' panicked at 'There was an error', src/main.rs
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+---
