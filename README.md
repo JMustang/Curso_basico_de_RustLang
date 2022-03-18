@@ -289,3 +289,39 @@ thread 'main' panicked at 'There was an error', src/main.rs
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
 ---
+
+#### Ownership em Rust
+- Um conceito importante em <b>Rust</b> é a <b>Ownership</b>. Existem três regras principais de <b>Ownership</b>:
+
+1. Cada valor em <b>Rust</b> tem uma variável que é chamada de <b>owner</b>.
+2. Só pode haver um <b>owner</b> de cada vez.
+ 3. Quando o <b>owner</b> sair do escopo, o valor será descartado.
+
+- É assim que o Rust se safa de não ter um <b>garbage collector</b>, ao mesmo tempo em que não exige que o programador gerencie explicitamente a memória. Aqui está um exemplo de <b>Ownership</b>:
+
+<b>EX:</b>
+
+```rs
+fn main() {// first_string ainda não foi declarado -> não tem valor
+  let first_string = String::from("freeCodeCamp"); // first_string agora e Ownership de um valor "freeCodeCamp"
+  let second_string = first_string; // second_string assume a Ownership do valor "freeCodeCamp"
+
+  println!("Hello, {}", first_string) // first_string NÃO é válido, porque o valor foi movido para second_string
+}
+```
+
+- Como o macro <b>println!</b> tenta se referir a uma variável inválida, esse código não compila. Para corrigir isso, em vez de mover o valor de <b>first_string</b> para <b>second_string</b>, <b>second_string</b> pode receber uma referência para <b>first_string</b>:
+
+<b>EX:</b>
+
+```rs
+fn main() {
+  let first_string: String = String::from("freeCodeCamp");
+  let second_string: &String = &first_string; // first_string ainda é o owner do valor "freeCodeCamp"
+  println!("Hello, {}", first_string)
+}
+```
+
+- O <b>E</b> comercial <b>(&)</b> indica que o valor é uma referência. Ou seja, <b>second_string</b> não se apropria mais de <b>"freeCodeCamp"</b>, mas, em vez disso, aponta para o mesmo ponto na memória que <b>first_string</b>.
+
+---
