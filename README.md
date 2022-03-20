@@ -341,7 +341,7 @@ $ 138 / 4 = 34.5
 ```
 
 ### Metodologia do Projeto da Calculadora CLI
-Passo 1 – Criar um novo projeto
+#### Passo 1 – Criar um novo projeto
 - Use Cargo para criar um novo projeto chamado calculadora:
 
 ```bash
@@ -353,5 +353,34 @@ Esse comando cria um novo diretório chamado <b>calculadora</b>, o  <b>Git</b> e
 1. <b>Cargo.toml</b> - O arquivo de manifesto usado pelo Cargo para gerenciar os metadados do seu projeto
 2. <b>src</b> - O diretorio onde vai ficar o seu codigo.
 3. <b>src/main.rs</b> - O arquivo padrão que o Cargo usa como ponto de entrada do aplicativo
+
+---
+
+#### Passo 2 – Entendendo a sintax
+O arquivo <b>Cargo.toml</b> contém o seguinte:
+
+```toml
+[package]
+name = "calculator"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+```
+O [package] indica os metadados do seu projeto.
+
+O cabeçalho [dependencies] indica as <b>crates</b> das quais seu projeto depende. As <b>crates</b> são como bibliotecas externas.
+
+O arquivo <b>main.rs</b> contém o seguinte:
+
+```rs
+fn main() {
+  println!("Hello, world!");
+}
+```
+
+Este arquivo contém uma declaração de função com o handle <b>main</b>. Por padrão, <b>rustc</b> chama a função <b>main</b> primeiro sempre que o executável for chamado.
+
+println! é uma macro interna que "printa" algo no console.
 
 ---
