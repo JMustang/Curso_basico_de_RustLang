@@ -325,3 +325,33 @@ fn main() {
 - O <b>E</b> comercial <b>(&)</b> indica que o valor é uma referência. Ou seja, <b>second_string</b> não se apropria mais de <b>"freeCodeCamp"</b>, mas, em vez disso, aponta para o mesmo ponto na memória que <b>first_string</b>.
 
 ---
+
+# Projeto #1 – Construir uma calculadora CLI em Rust
+#### Resultado do projeto
+- No final deste projeto, você será capaz de realizar operações aritméticas básicas em números usando a linha de comando.
+
+Exemplos de entrada e saída esperadas são assim:
+
+```bash
+$ calculator 1 + 1
+$ 1 + 1 = 2
+
+$ calculator 138 / 4
+$ 138 / 4 = 34.5
+```
+
+### Metodologia do Projeto da Calculadora CLI
+Passo 1 – Criar um novo projeto
+- Use Cargo para criar um novo projeto chamado calculadora:
+
+```bash
+$ cargo new calculadora
+```
+Esse comando cria um novo diretório chamado <b>calculadora</b>, o  <b>Git</b> e um <b>boilerplate</b> útil são adicionado ao seu projeto.
+
+#### O boilerplate inclui:
+1. <b>Cargo.toml</b> - O arquivo de manifesto usado pelo Cargo para gerenciar os metadados do seu projeto
+2. <b>src</b> - O diretorio onde vai ficar o seu codigo.
+3. <b>src/main.rs</b> - O arquivo padrão que o Cargo usa como ponto de entrada do aplicativo
+
+---
