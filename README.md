@@ -384,3 +384,25 @@ Este arquivo contém uma declaração de função com o handle <b>main</b>. Por 
 println! é uma macro interna que "printa" algo no console.
 
 ---
+
+#### Passo 3 – Rodando o projeto.
+Você pode usar o <b>Cargo</b> para executar o código do seu projeto:
+
+```bash
+# Dentro do diretorio /calculadora
+$ cargo run
+   Compiling fcc-rust-in-replit v0.1.0 (/home/runner/Rust-in-Replit-1)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.80s
+     Running `target/debug/calculator`
+Hello, world!
+```
+
+Ou Você pode usa <b>rustc</b> para copilar o projeto,e roda o binario:
+
+```bash
+# Dentro do diretorio /calculadora
+$ rustc src/main.rs
+$ ./main
+Hello, world!
+```
+---
