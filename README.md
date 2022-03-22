@@ -406,3 +406,68 @@ $ ./main
 Hello, world!
 ```
 ---
+
+#### Passo 4 – Argumentos da linha de comando
+
+A biblioteca padrão do <b>Rust</b> vem com um módulo <b>env</b>, que permite acesso aos argumentos de linha de comando passados ​​ao chamar o programa.
+
+As exportações necessárias do módulo env são a função <b>args</b> e a estrutura <b>Args</b>. A função <b>args</b> retorna uma instância da estrutura <b>args</b> e é importada para o escopo do arquivo com:
+
+```rs
+use std::env::{args, Args};
+```
+
+Para ter uma ideia de como é a estrutura <b>Args</b>, a variável <b>args</b> é impressa no console:
+
+```rs
+fn main() {
+  let args: Args = args();
+  println!("{:?}", args);
+}
+```
+
+```bash
+$ cargo run -- fCC
+   Compiling calculator v0.1.0 (/home/runner/Rust-in-Replit/calculator)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.71s
+     Running `target/debug/calculator`
+Args { inner: ["target/debug/toto", "fCC"] }
+```
+
+O trecho acima mostra que a estrutura <b>Args</b> contém um campo chamado <b>inner</b> que consiste na localização do binário compilado e os argumentos da linha de comando passados ​​para o programa.
+
+Para acessar os valores dos argumentos, você pode usar o método <b>nth</b> na variável <b>args</b>. O <b>nth</b> método recebe um argumento de <b>index</b>,
+e retorna o valor nesse índice envolto em uma opção. Portanto, o valor precisa ser desembrulhado.
+
+```rs
+fn main() {
+  let mut args: Args = args();
+
+  let first: String = args.nth(1).unwrap();
+}
+```
+
+A variável <b>args</b> precisa ser declarada como mutável, porque o método <b>nth</b> mutável itera sobre os elementos e remove o elemento acessado.
+
+<b>EX:</b>
+
+```rs
+fn main() {
+  let mut args: Args = args();
+
+  // O primeiro argumento é a localização do binário compilado, então pule-o
+  let first: String = args.nth(1).unwrap();
+  // Depois de acessar o segundo argumento, o próximo elemento do iterador se torna o primeiro
+  let operator: String = args.nth(0).unwrap();
+  let second: String = args.nth(0).unwrap();
+
+  println!("{} {} {}", first, operator, second);
+}
+```
+
+```bash
+$ cargo run -- 1 + 1
+   Compiling calculator v0.1.0 (/home/runner/Rust-in-Replit/calculator)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.71s
+     Running `target/debug/calculator 1 + 1` 
+```
