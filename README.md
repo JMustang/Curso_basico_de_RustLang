@@ -469,6 +469,5 @@ fn main() {
 $ cargo run -- 1 + 1
    Compiling calculator v0.1.0 (/home/runner/Rust-in-Replit/calculator)
     Finished dev [unoptimized + debuginfo] target(s) in 1.71s
-     Running `target/debug/calculator`
-1 + 1
+     Running `target/debug/calculator 1 + 1` 
 ```
