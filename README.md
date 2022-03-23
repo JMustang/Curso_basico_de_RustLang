@@ -557,3 +557,57 @@ fn output(first_number: f32, operator: char, second_number: f32, result: f32) ->
   )
 }
 ```
+
+#### Passo 8 – Junte tudo
+
+```rs
+use std::env::{args, Args};
+
+fn main() {
+  let mut args: Args = args();
+
+  let first: String = args.nth(1).unwrap();
+  let operator: char = args.nth(0).unwrap().chars().next().unwrap();
+  let second: String = args.nth(0).unwrap();
+
+  let first_number = first.parse::<f32>().unwrap();
+  let second_number = second.parse::<f32>().unwrap();
+  let result = operate(operator, first_number, second_number);
+
+  println!("{}", output(first_number, operator, second_number, result));
+}
+
+fn output(first_number: f32, operator: char, second_number: f32, result: f32) -> String {
+  format!(
+    "{} {} {} = {}",
+    first_number, operator, second_number, result
+  )
+}
+
+fn operate(operator: char, first_number: f32, second_number: f32) -> f32 {
+  match operator {
+    '+' => first_number + second_number,
+    '-' => first_number - second_number,
+    '/' => first_number / second_number,
+    '*' | 'X' | 'x' => first_number * second_number,
+    _ => panic!("Invalid operator used."),
+  }
+}
+```
+
+Para criar o executável, você precisa rodar o seguinte comando:
+
+```bash
+$ cargo build --release
+   Compiling calculadora v0.1.0 (/home/junior/Code Projects/Rust-Lang/Curso_basico_de_RustLang/calculadora)
+    Finished release [optimized] target(s) in 0.29s
+```
+
+A flag <b>--release</b> diz a o <b>Cargo</b> para compilar o binario para o modo <b>release</b>. Isso reduzirá o tamanho do binário e também removerá qualquer informação de depuração.
+
+O binario sera criado no diretorio <b>target/release</b>. Para rodar o binario, você precisa executar o seguinte comando:
+
+```bash
+$ target/release/calculadora 1 + 1
+1 + 1 = 2
+```
