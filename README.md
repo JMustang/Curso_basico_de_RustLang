@@ -497,7 +497,7 @@ O método <b>parse</b> acima usa a sintaxe do <b>turbofish</b> para especificar 
 
 ---
 
-### Passo 6 – Executando operações aritméticas básicas
+#### Passo 6 – Executando operações aritméticas básicas
 
 <b>Rust</b> usa os operadores padrão para  realizar adições, subtrações, multiplicações e divisões.
 
@@ -542,3 +542,18 @@ fn main() {
 ```
 
 O retorno da função <b>operate</b> sera alocada na variavel <b>result</b>.
+
+---
+
+#### Passo sete – Formate a saída
+
+Para obter a saida desejada, as variaveis <b>first_number</b>, <b>second_number</b> e <b>result</b> precisam ser formatadas. Você pode usar o método macro <b>format!</b> para criar uma <b>String</b> a partir de uma <b>string</b> e uma lista de argumentos.
+
+```rs
+fn output(first_number: f32, operator: char, second_number: f32, result: f32) -> String {
+  format!(
+    "{} {} {} = {}",
+    first_number, operator, second_number, result
+  )
+}
+```
