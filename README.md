@@ -493,4 +493,52 @@ fn main() {
 }
 ```
 
-O método <b>bparse</b> acima usa a sintaxe do <b>turbofish</b> para especificar o tipo para tentar transformar a <b>string</b>.
+O método <b>parse</b> acima usa a sintaxe do <b>turbofish</b> para especificar o tipo para tentar transformar a <b>string</b>.
+
+---
+
+### Passo 6 – Executando operações aritméticas básicas
+
+<b>Rust</b> usa os operadores padrão para  realizar adições, subtrações, multiplicações e divisões.
+
+Para lidar com as operações, você define uma função chamada <b>operate</b> que recebe três argumentos:
+O operador como um <b>char</b>, e dois números como <b>f32</b>s. A função <b>operate</b> retorna um <b>f32</b> como resultado.
+
+<b>EX:</b>
+
+```rs
+fn operate(operator: char, first_number: f32, second_number: f32) -> f32 {
+  match operator {
+    '+' => first_number + second_number,
+    '-' => first_number - second_number,
+    '/' => first_number / second_number,
+    '*' | 'X' | 'x' => first_number * second_number,
+    _ => panic!("Invalid operator used."),
+  }
+}
+```
+
+A expressão <b>match</b> funciona de maneira semelhante a uma instrução <b>switch</b> em outra linguagem. A expressão <b>match</b> recebe um valor e uma lista de <b>casos</b>. Cada <b>casos</b> é um padrão de valor e uma bloco. O padrão é um valor para corresponder e o bloco é o código a ser executado se o padrão corresponder. O padrão <b>_</b> é um curinga, agindo como uma cláusula <b>else</b>.
+O <b>caso</b> de multiplicação inclui a comparação <b>OR</b> para permitir que <b>casos</b> para X e x sejam tratados.
+
+Agora, para chamar operar com o operador, você precisa primeiro convertê-lo em um char. Você faz isso com o método chars na estrutura String que retorna um iterador sobre os caracteres na string. Em seguida, o primeiro caractere é desempacotado:
+
+<b>EX:</b>
+
+```rs
+fn main() {
+  let mut args: Args = args();
+
+  let first: String = args.nth(1).unwrap();
+  let operator: char = args.nth(0).unwrap().chars().next().unwrap();
+  let second: String = args.nth(0).unwrap();
+
+  let first_number = first.parse::<f32>().unwrap();
+  let second_number = second.parse::<f32>().unwrap();
+  let result = operate(operator, first_number, second_number);
+
+  println!("{} {} {}", first_number, operator, second_number);
+}
+```
+
+O retorno da função <b>operate</b> sera alocada na variavel <b>result</b>.
