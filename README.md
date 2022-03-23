@@ -471,3 +471,26 @@ $ cargo run -- 1 + 1
     Finished dev [unoptimized + debuginfo] target(s) in 1.71s
      Running `target/debug/calculator 1 + 1` 
 ```
+
+#### Passo 5 – transformar Strings em Números
+
+A primeira e a segunda variáveis ​​são <b>strings</b> e você precisa transforma-las em números. A estrutura <b>strings</b> implementa o método <b>parse</b>, que recebe uma anotação de tipo e retorna um <b>Result</b> contendo o valor analisado.
+
+```rs
+use std::env::{args, Args};
+
+fn main() {
+  let mut args: Args = args();
+
+  let first: String = args.nth(1).unwrap();
+  let operator: String = args.nth(0).unwrap();
+  let second: String = args.nth(0).unwrap();
+
+  let first_number = first.parse::<f32>().unwrap();
+  let second_number = second.parse::<f32>().unwrap();
+
+  println!("{} {} {}", first_number, operator, second_number);
+}
+```
+
+O método <b>bparse</b> acima usa a sintaxe do <b>turbofish</b> para especificar o tipo para tentar transformar a <b>string</b>.

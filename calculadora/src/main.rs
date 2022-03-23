@@ -9,5 +9,8 @@ fn main() {
     let operator: String = args.nth(0).unwrap();
     let second: String = args.nth(0).unwrap();
 
-    println!("{} {} {}", first, operator, second);
+    let first_number = first.parse::<f32>().unwrap();
+    let second_number = second.parse::<f32>().unwrap();
+
+    println!("{} {} {}", first_number, operator, second_number);
 }
