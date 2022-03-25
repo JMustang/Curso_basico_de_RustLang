@@ -725,3 +725,91 @@ fn get_nth_arg(n: usize) -> String {
 ```
 
 ---
+
+#### Passo 3 – Importar e usar o módulo args
+
+Dentro de <b>main.rs</b>, você precisa declarar o arquivo <b>args.rs</b> como um módulo. Então, para usar a estrutura <b>Args</b>, você precisa importá-la:
+
+<b>EX:</b>
+
+```rs
+mod args;
+use args::Args;
+
+fn main() {
+  let args = Args::new();
+  println!("{:?}", args);
+}
+```
+
+Mas testar o código revela um erro:
+
+<b>EX:</b>
+
+```bash
+$ cargo run -- arg1 arg2 arg3
+   Compiling combiner v0.1.0 (/home/runner/Rust-in-Replit/combiner)
+error[E0277]: `args::Args` doesn't implement `Debug`
+  --> src/main.rs:12:20
+   |
+12 |   println!("{:?}", args);
+   |                    ^^^^ `args::Args` cannot be formatted using `{:?}`
+   |
+   = help: the trait `Debug` is not implemented for `args::Args`
+   = note: add `#[derive(Debug)]` or manually implement `Debug`
+   = note: required by `std::fmt::Debug::fmt`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: aborting due to previous error
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `combiner`
+
+To learn more, run the command again with --verbose.
+```
+
+Da mesma forma que as funções são implementadas para <b>structs</b>, as <b>traits</b> podem ser implementadas para <b>structs</b>. No entanto, o <b>traits</b> <b>Debug</b> é especial, pois pode ser implementado usando atributos:
+
+<b>EX:</b>
+
+```rs
+#[derive(Debug)]
+pub struct Args {
+  pub image_1: String,
+  pub image_2: String,
+  pub output: String,
+}
+```
+
+A característica <b>Debug</b> foi derivada para a estrutura <b>Args</b>. Isso significa que o <b>traits</b> <b>Debug</b> é implementado automaticamente para a estrutura, sem que você precise implementá-lo manualmente 🚀.
+
+Agora, executando o código funciona:
+
+```bash
+$ cargo run -- arg1 arg2 arg3
+    Finished dev [unoptimized + debuginfo] target(s) in 0.01s
+     Running `target/debug/combiner arg1 arg2 arg3`
+Args { image_1: "arg1", image_2: "arg2", output: "arg3" }
+```
+
+#### Passo 4 – Adicione uma Crate
+
+Da mesma forma que outras linguagens têm bibliotecas ou pacotes, <b>Rust</b> tem <b>Crates</b>. Para codificar e decodificar imagens, você pode usar a <b>crate</b> <b>image</b>.
+
+Adicione a <b>crate</b> de imagem com a versão <b>0.23.14</b> ao arquivo <b>Cargo.toml</b>:
+
+<b>EX:</b>
+
+```toml
+[package]
+name = "combiner"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+image = "0.23.14"
+```
+
+Agora, quando o <b>cargo</b> for chamada, Cargo irá buscar e instalar a <b>crate</b> <b>image</b>.

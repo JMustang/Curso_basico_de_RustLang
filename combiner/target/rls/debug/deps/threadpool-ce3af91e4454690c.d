@@ -1,0 +1,5 @@
+/home/junior/Code Projects/Rust-Lang/Curso_basico_de_RustLang/combiner/target/rls/debug/deps/threadpool-ce3af91e4454690c.rmeta: /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/threadpool-1.8.1/src/lib.rs
+
+/home/junior/Code Projects/Rust-Lang/Curso_basico_de_RustLang/combiner/target/rls/debug/deps/threadpool-ce3af91e4454690c.d: /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/threadpool-1.8.1/src/lib.rs
+
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/threadpool-1.8.1/src/lib.rs:
