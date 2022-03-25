@@ -1,20 +1,17 @@
 # Curso basico de [Rust-lang](https://www.rust-lang.org)
 
-
 [![LOGO](rust-logo.jpg)](https://www.rust-lang.org)
 
-###### Fonte: artigo tirado do site [freeCodeCamp](https://www.freecodecamp.org), de [Shaun Hamilton](https://www.freecodecamp.org/news/rust-in-replit/).
-
-
+###### Fonte: artigo tirado do site [freeCodeCamp](https://www.freecodecamp.org), de [Shaun Hamilton](https://www.freecodecamp.org/news/rust-in-replit/)
 
 ## Uma visão geral do Rust
 
-#### Rust, uma linguagem de programação a nivel de sistema.
+#### Rust, uma linguagem de programação a nivel de sistema
 
 - Lida com detalhes de baixo nivel de gerenciamento de memoria, representacao de dados e simultaneidade.
 - A linguagem foi projetada para guiá-lo naturalmente em direção a um código confiável que seja eficiente em termos de velocidade e uso de memória.
 
-#### Principais ferramentas do ecosistema Rust.
+#### Principais ferramentas do ecosistema Rust
 
 1. <b>rustc</b> - O copilador do rust que transforma o codigo em binario (Codigo de maquina).
 2. <b>rustup</b> - A linha de comando para instalar e atualizar o Rust.
@@ -22,7 +19,7 @@
 
 ### Basico do Rust
 
-#### Variaveis em Rust.
+#### Variaveis em Rust
 
 ---
 
@@ -130,6 +127,7 @@ let meu_str: &str = "Ola mundo!";
 
 let minha_string: String = String::from("Ola Mundo!");
 ```
+
 - No exemplo acima, <b>meu_str</b> é uma referencia para uma <b>String</b> literal, e <b>minha_string</b> é uma instacia da <b>String</b>.
 - Uma distinção importante entre elas é que <b>meu_str</b> é armazenada em pilha e <b>minha_string</b> é alocada em pilha. Isso significa que o valor de <b>meu_str</b> não pode mudar e seu tamanho e fixo, enquanto <b>minha_string</b> pode ter um tamanho desconhecido em tempo de compilação.
 - A <b>String</b> literal tambem e conhecida como fatia de string. Isso ocorre porque um <b>&str</b> se refere a parte de uma string. Geralmente, é assim que <b>arrays</b> e <b>Strrings</b> assemelham-se.
@@ -148,28 +146,32 @@ let meu_arr_fatiado: &[usize] = &meu_arr[0..3]; // [1,2,3]
 
 ---
 
-#### O tipo char no rust.
+#### O tipo char no rust
+
 - Um <b>char</b> é um USV (Unicode Scalar Value), que é representado por um valor unicode como <b>'∞'</b>. Você deve pensar em uma coleção ou array de caracteres como uma <b>string</b>.
 
 EX:
+
 ```rs
 let meu_str: &str = "Ola, Mundo!"
 
 let colecao_de_chars: &str = meu_str.chars().as_str();
 ```
+
 ---
 
 #### Tipo Number em rust
 
 - Existem varios tipos de <b>Numbers</b> em <b>rust</b>:
 
-1.Inteiros não declarado:<b>u8, u16, u32, u64, u128</b> 
+1.Inteiros não declarado:<b>u8, u16, u32, u64, u128</b>
 2.Inteiros declarado:<b>i8, i16, i32, i64, i128</b>
 3.Números Float:<b>f32, f64</b>
 
 - Inteiros não declarado, representam apenas números inteiros positivos.
 - Inteiros declarado, representam números inteiros positivos e negativos.
 - Float representam apenas frações positivas e negativas.
+
 ---
 
 #### Structs no Rust
@@ -196,6 +198,7 @@ struct MeuStruct {
 
 let meu_struct = MeuStruct { field_1: 0, };
 ```
+
 - Anteriormente, a <b>struct String</b> era usado com sua função <b>from</b> para criar uma <b>String</b> a partir de um &str. Isso é possivel porque a função <b>from</b> é implementada para a <b>String</b>:
 
 <b>EX:</b>
@@ -222,7 +225,9 @@ struct MinhaTuplesStruct(u8, u8);
 ```
 
 ---
+
 #### Enums em Rust
+
 - Semelhante a outras linguagens, enums são úteis para atuar como tipos e valores.
 
 <b>EX:</b>
@@ -252,6 +257,7 @@ fn work() -> Result<(), meusErros> { // Result também é um enum
 ---
 
 #### Macros em Rust
+
 - Um macro é semelhante a uma função, mas você pode pensar nela como um pedaço de código que escreve outro código. Por enquanto, as principais diferenças entre uma função e uma macro a serem lembradas são:
 
 1. As macros são chamadas usando um bang (!).
@@ -265,6 +271,7 @@ fn work() -> Result<(), meusErros> { // Result também é um enum
 let meu_str = "Ola, Mundo!";
 println!("{}", meu_str);
 ```
+
 - Você usa a sintaxe <b>{}</b> para inserir uma variável em uma string.
 
 - Outra macro comum é o <b>panic!</b>. Entrar em pânico é a maneira de Rust 'errar'. É sábio pensar em um <b>panic!</b> em <b>Rust</b> como um erro mal tratado. A macro aceita um literal de string e entra em pânico com essa mensagem.
@@ -279,7 +286,7 @@ if (eu_sou_um_erro) {
 }
 ```
 
-```zsh 
+```zsh
 # cargo é o NPM (package manage) do Rust
 $ cargo run
    Compiling fcc-rust-in-replit v0.1.0 (/home/runner/Rust-in-Replit)
@@ -288,14 +295,16 @@ $ cargo run
 thread 'main' panicked at 'There was an error', src/main.rs
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
+
 ---
 
 #### Ownership em Rust
+
 - Um conceito importante em <b>Rust</b> é a <b>Ownership</b>. Existem três regras principais de <b>Ownership</b>:
 
 1. Cada valor em <b>Rust</b> tem uma variável que é chamada de <b>owner</b>.
 2. Só pode haver um <b>owner</b> de cada vez.
- 3. Quando o <b>owner</b> sair do escopo, o valor será descartado.
+3. Quando o <b>owner</b> sair do escopo, o valor será descartado.
 
 - É assim que o Rust se safa de não ter um <b>garbage collector</b>, ao mesmo tempo em que não exige que o programador gerencie explicitamente a memória. Aqui está um exemplo de <b>Ownership</b>:
 
@@ -327,29 +336,35 @@ fn main() {
 ---
 
 # Projeto #1 – Construir uma calculadora CLI em Rust
+
 #### Resultado do projeto
+
 - No final deste projeto, você será capaz de realizar operações aritméticas básicas em números usando a linha de comando.
 
 Exemplos de entrada e saída esperadas são assim:
 
 ```bash
-$ calculator 1 + 1
-$ 1 + 1 = 2
+calculator 1 + 1
+1 + 1 = 2
 
-$ calculator 138 / 4
-$ 138 / 4 = 34.5
+calculator 138 / 4
+138 / 4 = 34.5
 ```
 
 ### Metodologia do Projeto da Calculadora CLI
+
 #### Passo 1 – Criar um novo projeto
+
 - Use Cargo para criar um novo projeto chamado calculadora:
 
 ```bash
-$ cargo new calculadora
+cargo new calculadora
 ```
+
 Esse comando cria um novo diretório chamado <b>calculadora</b>, o  <b>Git</b> e um <b>boilerplate</b> útil são adicionado ao seu projeto.
 
-#### O boilerplate inclui:
+#### O boilerplate inclui
+
 1. <b>Cargo.toml</b> - O arquivo de manifesto usado pelo Cargo para gerenciar os metadados do seu projeto
 2. <b>src</b> - O diretorio onde vai ficar o seu codigo.
 3. <b>src/main.rs</b> - O arquivo padrão que o Cargo usa como ponto de entrada do aplicativo
@@ -357,6 +372,7 @@ Esse comando cria um novo diretório chamado <b>calculadora</b>, o  <b>Git</b> e
 ---
 
 #### Passo 2 – Entendendo a sintax
+
 O arquivo <b>Cargo.toml</b> contém o seguinte:
 
 ```toml
@@ -367,6 +383,7 @@ edition = "2018"
 
 [dependencies]
 ```
+
 O [package] indica os metadados do seu projeto.
 
 O cabeçalho [dependencies] indica as <b>crates</b> das quais seu projeto depende. As <b>crates</b> são como bibliotecas externas.
@@ -385,7 +402,8 @@ println! é uma macro interna que "printa" algo no console.
 
 ---
 
-#### Passo 3 – Rodando o projeto.
+#### Passo 3 – Rodando o projeto
+
 Você pode usar o <b>Cargo</b> para executar o código do seu projeto:
 
 ```bash
@@ -405,6 +423,7 @@ $ rustc src/main.rs
 $ ./main
 Hello, world!
 ```
+
 ---
 
 #### Passo 4 – Argumentos da linha de comando
@@ -611,3 +630,98 @@ O binario sera criado no diretorio <b>target/release</b>. Para rodar o binario, 
 $ target/release/calculadora 1 + 1
 1 + 1 = 2
 ```
+
+---
+
+# Projeto #2 – Construir um Combinador de Imagens em Rust
+
+#### Resultado do projeto
+
+- No final deste projeto, você poderá combinar duas imagens usando a linha de comando.
+
+Aqui está um exemplo de uma entrada esperada:
+
+```bash
+combiner ./image1.png ./image2.png ./output.png
+```
+
+Para um exemplo de saida, use a imagem desse artigo: ☝️
+
+### Metodologia desse projeto
+
+#### Passo 1 - Criar um novo projeto
+
+Use o <b>Cargo</b> para criar um novo projeto chamado <b>combiner</b>:
+
+```bash
+cargo new combiner
+```
+
+#### Passo 2 - Adicionar um modulo novo chamado Args
+
+Para evitar que o arquivo <b>main.rs</b> fique muito pessado, crie um novo modulo chamado <b>Args.rs</b> no diretorio <b>src/</b>.
+Dentro de <b>Args.rs</b> crie uma função chamada <b>get_nth_arg</b> que recebe um <b>usize</b>, <b>n</b>, e retorna uma <b>String</b>. Então, apartir do modulo <b>std::env</b>, chame a função <b>args</b> e encadeie o <b>nth</b> método para obter o <b>nth</b> argumento, desempacotando o valor:
+
+<b>EX:</b>
+
+```rs
+fn get_nth_arg(n: usize) -> String {
+  std::env::args().nth(n).unwrap()
+}
+```
+
+Defina uma estrutura pública chamada <b>Args</b> que consiste em três campos públicos de tipo <b>String</b>:<b>image_1</b>, <b>image_2</b> e <b>output</b>:
+
+<b>EX:</b>
+
+```rs
+pub struct Args {
+  pub image_1: String,
+  pub image_2: String,
+  pub output: String,
+}
+```
+
+Declare a estrutura e seus campos como públicos com a palavra-chave <b>pub</b> para que você possa acessá-los de fora do arquivo <b>args.rs.</b>
+
+Por fim, você pode usar a função <b>get_nth_arg</b> para criar uma nova estrutura <b>Args</b> em uma nova função:
+
+<b>EX:</b>
+
+```rs
+impl Args {
+  pub fn new() -> Self {
+    Args {
+      image_1: get_nth_arg(1),
+      image_2: get_nth_arg(2),
+      output: get_nth_arg(3),
+    }
+  }
+}
+```
+
+O arquivo <b>args.rs</b> deve ficar  como o seguinte:
+
+```rs
+pub struct Args {
+  pub image_1: String,
+  pub image_2: String,
+  pub output: String,
+}
+
+impl Args {
+  pub fn new() -> Self {
+    Args {
+      image_1: get_nth_arg(1),
+      image_2: get_nth_arg(2),
+      output: get_nth_arg(3),
+    }
+  }
+}
+
+fn get_nth_arg(n: usize) -> String {
+  std::env::args().nth(n).unwrap()
+}
+```
+
+---
