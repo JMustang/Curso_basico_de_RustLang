@@ -1,0 +1,14 @@
+/home/junior/Code Projects/Rust-Lang/Curso_basico_de_RustLang/combiner/target/rls/debug/deps/png-c587e27fc33c1603.rmeta: /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/lib.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/chunk.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/common.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/mod.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/stream.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/zlib.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/encoder.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/filter.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/traits.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/utils.rs
+
+/home/junior/Code Projects/Rust-Lang/Curso_basico_de_RustLang/combiner/target/rls/debug/deps/png-c587e27fc33c1603.d: /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/lib.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/chunk.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/common.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/mod.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/stream.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/zlib.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/encoder.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/filter.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/traits.rs /home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/utils.rs
+
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/lib.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/chunk.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/common.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/mod.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/stream.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/decoder/zlib.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/encoder.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/filter.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/traits.rs:
+/home/junior/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.16.8/src/utils.rs:
