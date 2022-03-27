@@ -1117,3 +1117,204 @@ fn main() -> Result<(), ImageDataErrors> {
 ```
 
 O <b>?</b> sintaxe no final de uma expressão é uma forma abreviada de lidar com o resultado de uma chamada de função. Se a chamada de função retornar um erro, o operador de propagação de erro retornará o erro da chamada de função.
+
+---
+
+#### Passo 11 – Gravar a imagem em um arquivo
+
+Por fim, salve a nova imagem em um arquivo. A <b>crate</b> de <b>image</b> tem uma função <b>save_buffer_with_format</b> com a seguinte forma:
+
+<b>EX:</b>
+
+```rs
+fn save_buffer_with_format(
+    path: AsRef<Path>,
+    buf: &[u8],
+    width: u32,
+    height: u32,
+    color: image::ColorType,
+    format: image::ImageFormat
+  ) -> image::ImageResult<()>;
+```
+
+Visto que <b>AsRef</b> é implementado para <b>String</b>, você pode usar um argumento do tipo <b>String</b> para o <b>path</b>.
+
+<b>EX:</b>
+
+```rs
+fn main() -> Result<(), ImageDataErrors> {
+  // ...
+  image::save_buffer_with_format(
+    output.name,
+    &output.data,
+    output.width,
+    output.height,
+    image::ColorType::Rgba8,
+    image_1_format,
+  )
+  .unwrap();
+  Ok(())
+}
+```
+
+---
+
+#### Passo 12 – Juntando tudo
+
+Segue o código final:
+
+```rs
+mod args;
+use args::Args;
+use image::{
+    imageops::FilterType::Triangle, io::Reader, DynamicImage, GenericImageView, ImageFormat,
+};
+use std::{fs::File, io::BufReader};
+
+#[derive(Debug)]
+enum ImageDataErrors {
+    BufferTooSmall,
+    DifferentImageFormats,
+    // UnableToReadImageFromPath(std::io::Error),
+}
+
+struct FloatingImage {
+    width: u32,
+    height: u32,
+    data: Vec<u8>,
+    name: String,
+}
+
+fn main() -> Result<(), ImageDataErrors> {
+    let args = Args::new();
+    // println!("{:?}", args);
+    let (image_1, image_1_format) = find_image_from_path(args.image_1);
+    let (image_2, image_2_format) = find_image_from_path(args.image_2);
+
+    if image_1_format != image_2_format {
+        return Err(ImageDataErrors::DifferentImageFormats);
+    }
+
+    let (image_1, image_2) = standardise_size(image_1, image_2);
+    let mut output = FloatingImage::new(image_1.width(), image_1.height(), args.output);
+
+    let combined_data = combine_images(image_1, image_2);
+    output.set_data(combined_data)?;
+
+    image::save_buffer_with_format(
+        output.name,
+        &output.data,
+        output.width,
+        output.height,
+        image::ColorType::Rgba8,
+        image_1_format,
+    )
+    .unwrap();
+    Ok(())
+}
+
+impl FloatingImage {
+    fn new(width: u32, height: u32, name: String) -> Self {
+        let buffer_capacity = 3_655_744;
+        let buffer: Vec<u8> = Vec::with_capacity(buffer_capacity);
+        FloatingImage {
+            width,
+            height,
+            data: buffer,
+            name,
+        }
+    }
+    fn set_data(&mut self, data: Vec<u8>) -> Result<(), ImageDataErrors> {
+        // If the previously assigned buffer is too small to hold the new data
+        if data.len() > self.data.capacity() {
+            return Err(ImageDataErrors::BufferTooSmall);
+        }
+        self.data = data;
+        Ok(())
+    }
+}
+
+fn find_image_from_path(path: String) -> (DynamicImage, ImageFormat) {
+    let image_reader: Reader<BufReader<File>> = Reader::open(path).unwrap();
+    let image_format: ImageFormat = image_reader.format().unwrap();
+    let image: DynamicImage = image_reader.decode().unwrap();
+    (image, image_format)
+}
+
+fn standardise_size(image_1: DynamicImage, image_2: DynamicImage) -> (DynamicImage, DynamicImage) {
+    let (width, height) = get_smallest_dimensions(image_1.dimensions(), image_2.dimensions());
+    println!("width: {}, height: {}\n", width, height);
+    if image_2.dimensions() == (width, height) {
+        (image_1.resize_exact(width, height, Triangle), image_2)
+    } else {
+        (image_1, image_2.resize_exact(width, height, Triangle))
+    }
+}
+
+fn get_smallest_dimensions(dim_1: (u32, u32), dim_2: (u32, u32)) -> (u32, u32) {
+    let pix_1 = dim_1.0 * dim_1.1;
+    let pix_2 = dim_2.0 * dim_2.1;
+    return if pix_1 < pix_2 { dim_1 } else { dim_2 };
+}
+
+fn combine_images(image_1: DynamicImage, image_2: DynamicImage) -> Vec<u8> {
+    let vec_1 = image_1.to_rgba8().into_vec();
+    let vec_2 = image_2.to_rgba8().into_vec();
+    alternate_pixels(vec_1, vec_2)
+}
+
+fn alternate_pixels(vec_1: Vec<u8>, vec_2: Vec<u8>) -> Vec<u8> {
+    // A Vec<u8> is created with the same length as vec_1
+    let mut combined_data = vec![0u8; vec_1.len()];
+    let mut i = 0;
+    while i < vec_1.len() {
+        if i % 8 == 0 {
+            combined_data.splice(i..=i + 3, set_rgba(&vec_1, i, i + 3));
+        } else {
+            combined_data.splice(i..=i + 3, set_rgba(&vec_2, i, i + 3));
+        }
+        i += 4;
+    }
+    combined_data
+}
+
+fn set_rgba(vec: &Vec<u8>, start: usize, end: usize) -> Vec<u8> {
+    let mut rgba = Vec::new();
+    for i in start..=end {
+        let val: u8 = match vec.get(i) {
+            Some(d) => *d,
+            None => panic!("Index out of bounds"),
+        };
+        rgba.push(val);
+    }
+    rgba
+}
+```
+
+### Construindo o binário
+
+```bash
+cargo build --release
+```
+
+Criando uma imagem combinada:
+use as imagens salvas no repo do projeto:
+
+```bash
+./target/release/combiner image/pro.png image/fcc_glyph.png image/output.png
+```
+
+E aqui está o resultado em image/output.png:
+
+![Resultado](combiner/image/output.png)
+
+---
+
+![Resultado](combiner/image/output2.png)
+
+---
+
+# Conclusão
+
+Com isso, agora você sabe o basico de <b>Rust</b>.
+Mais ainda tem muita coisa para aprender, mas não se preocupe, você pode continuar lendo o [Guia de estudo](https://doc.rust-lang.org/book/).
