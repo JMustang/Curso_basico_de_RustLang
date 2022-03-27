@@ -886,3 +886,234 @@ enum ImageDataErrors {
 ```
 
 ---
+
+#### Passo 7 – Redimensione as imagens para combinar
+
+Para facilitar a combinação das imagens, você redimensiona a imagem maior para corresponder à imagem menor.
+
+Primeiro, você pode encontrar a menor imagem usando o método de <b>dimensions</b> que retorna a largura e a altura da imagem como uma tupla. Essas tuplas podem ser comparadas e a menor retornada:
+
+<b>EX:</b>
+
+```rs
+fn get_smallest_dimensions(dim_1: (u32, u32), dim_2: (u32, u32)) -> (u32, u32) {
+  let pix_1 = dim_1.0 * dim_1.1;
+  let pix_2 = dim_2.0 * dim_2.1;
+  return if pix_1 < pix_2 { dim_1 } else { dim_2 };
+}
+```
+
+Os valores da tupla são acessados ​​usando notação de ponto da indexação baseada em zero.
+
+Se a <b>imagem_2</b> for a menor imagem, a <b>imagem_1</b> precisará ser redimensionada para corresponder às menores dimensões. Caso contrário, <b>image_2</b> precisa ser redimensionado.
+
+<b>EX:</b>
+
+```rs
+fn standardise_size(image_1: DynamicImage, image_2: DynamicImage) -> (DynamicImage, DynamicImage) {
+  let (width, height) = get_smallest_dimensions(image_1.dimensions(), image_2.dimensions());
+  println!("width: {}, height: {}\n", width, height);
+
+  if image_2.dimensions() == (width, height) {
+    (image_1.resize_exact(width, height, Triangle), image_2)
+  } else {
+    (image_1, image_2.resize_exact(width, height, Triangle))
+  }
+}
+```
+
+O método <b>resize_exact</b> implementado na estrutura <b>DynamicImage</b> empresta a imagem de forma mutável e, usando os argumentos <b>width</b>, <b>height</b> e <b>FilterType</b>, redimensiona a imagem.
+
+Usando o retorno da função <b>standardise_size</b>, você pode redeclarar as variáveis <b>​​image_1</b> e <b>​​image_2</b>:
+
+```rs
+use image::{ io::Reader, DynamicImage, ImageFormat, imageops::FilterType::Triangle };
+
+fn main() -> Result<(), ImageDataErrors> {
+  // ...
+  let (image_1, image_2) = standardise_size(image_1, image_2);
+  Ok(())
+}
+```
+
+---
+
+#### Passo 8 – Crie uma imagem Floating
+
+Para manipular a saída, crie uma estrutura temporária para conter os metadados da imagem de saída.
+
+Defina um struct chamado <b>FloatingImage</b> para conter a <b>width</b>, <b>height</b> e a  data da imagem, bem como o <b>name</b> do arquivo de saída:
+
+```rs
+struct FloatingImage {
+  width: u32,
+  height: u32,
+  data: Vec<u8>,
+  name: String,
+}
+```
+
+Em seguida, implemente uma nova função para <b>FloatingImage</b> que recebe valores para <b>width</b>, <b>height</b> e <b>name</b> da imagem de saída:
+
+```rs
+impl FloatingImage {
+  fn new(width: u32, height: u32, name: String) -> Self {
+    let buffer_capacity = 3_655_744;
+    let buffer: Vec<u8> = Vec::with_capacity(buffer_capacity);
+    FloatingImage {
+      width,
+      height,
+      data: buffer,
+      name,
+    }
+  }
+}
+```
+
+Como você ainda não criou os dados para a imagem, crie um buffer na forma de um <b>Vec</b> de <b>u8s</b> com capacidade de <b>3.655.744 (956 x 956 x 4)</b>. A sintaxe ```<number>_<number>``` é a numeração de fácil leitura do <b>Rust</b> que separa o número em grupos ou três dígitos.
+Use os valores de <b>width</b> e <b>height</b> da variável <b>image_1</b> para criar uma instância da <b>FloatingImage</b> e use o terceiro argumento armazenado em <b>args</b> para definir o nome da <b>FloatingImage</b>:
+
+<b>EX:</b>
+
+```rs
+fn main() -> Result<(), ImageDataErrors> {
+  // ...
+  let mut output = FloatingImage::new(image_1.width(), image_1.height(), args.output);
+  Ok(())
+}
+```
+
+Desclare as variaveis de saida como mutáveis para que você possa manipular os campos de dados posteriormente.
+
+---
+
+#### Etapa 9 - Criar os dados de imagem combinados
+
+Para processar as imagens, você precisa convertê-las em um vetor de pixels RGBA. Os pixels são armazenados como u8s, pois seus valores estão entre 0 e 255.
+
+A estrutura <b>DynamicImage</b> implementa o método <b>to_rgba8</b>, que retorna um <b>ImageBuffer</b> contendo um <b>Vec<u8></b>,
+e o <b>ImageBuffer</b> implementa o método <b>into_vec</b>, que retorna o <b>Vec<u8></b>:
+
+<b>EX:</b>
+
+```rs
+fn combine_images(image_1: DynamicImage, image_2: DynamicImage) -> Vec<u8> {
+  let vec_1 = image_1.to_rgba8().into_vec();
+  let vec_2 = image_2.to_rgba8().into_vec();
+
+  alternate_pixels(vec_1, vec_2)
+}
+```
+
+Em seguida, as variáveis <b>​​vec_1</b> e <b>​​vec_2</b> são passadas para a função <b>alternate_pixels</b> que retorna os dados combinados da imagem alternando os conjuntos de pixels RGBA das duas imagens:
+
+```rs
+fn alternate_pixels(vec_1: Vec<u8>, vec_2: Vec<u8>) -> Vec<u8> {
+  // A Vec<u8> is created with the same length as vec_1
+  let mut combined_data = vec![0u8; vec_1.len()];
+
+  let mut i = 0;
+  while i < vec_1.len() {
+    if i % 8 == 0 {
+      combined_data.splice(i..=i + 3, set_rgba(&vec_1, i, i + 3));
+    } else {
+      combined_data.splice(i..=i + 3, set_rgba(&vec_2, i, i + 3));
+    }
+    i += 4;
+  }
+
+  combined_data
+}
+```
+
+A função <b>set_rgba</b> faz referência a um <b>Vec<u8></b> e retorna o conjunto de pixels RGBA para esse <b>Vec<u8></b> começando e terminando em um determinado índice:
+
+```rs
+fn set_rgba(vec: &Vec<u8>, start: usize, end: usize) -> Vec<u8> {
+  let mut rgba = Vec::new();
+  for i in start..=end {
+    let val = match vec.get(i) {
+      Some(d) => *d,
+      None => panic!("Index out of bounds"),
+    };
+    rgba.push(val);
+  }
+  rgba
+}
+```
+
+A sintaxe <b>..=</b> é a sintaxe de intervalo do <b>Rust</b> que permite que o intervalo inclua o valor final. O símbolo * antes de uma variável é o operador de desreferenciação do Rust, que permite que o valor da variável seja acessado.
+
+Em seguida, atribua o retorno de <b>combine_images</b> à variável <b>Combine_data</b>:
+
+```rs
+fn main() -> Result<(), ImageDataErrors> {
+  // ...
+  let combined_data = combine_images(image_1, image_2);
+  Ok(())
+}
+```
+
+#### Passo 10 – Anexe os dados combinados à imagem Floating
+
+Para definir os dados de <b>Combine_data</b> na imagem de <b>output</b>, um método em <b>FloatingImage</b> é definido para definir o campo de dados de <b>output</b> para o valor de <b>Combine_data</b>.
+
+Até agora, você só implementou funções em structs. Os métodos são definidos de maneira semelhante,
+mas eles tomam uma instância da estrutura como seu primeiro argumento:
+
+<b>EX:</b>
+
+```rs
+struct MyStruct {
+  name: String,
+}
+impl MyStruct {
+  fn change_name(&mut self, new_name: &str) {
+    self.name = new_name.to_string();
+  }
+}
+
+let mut my_struct = MyStruct { name: String::from("Shaun") };
+// my_struct.name == "Shaun"
+my_struct.change_name("Tom");
+// my_struct.name == "Tom"
+```
+
+Como você precisa alterar o valor da instância de <b>FloatingImage</b>, o método <b>set_data</b> recebe uma referência mutável para a instância como seu primeiro argumento.
+
+<b>EX:</b>
+
+```rs
+impl FloatingImage {
+  // ...
+  fn set_data(&mut self, data: Vec<u8>) -> Result<(), ImageDataErrors> {
+    // If the previously assigned buffer is too small to hold the new data
+    if data.len() > self.data.capacity() {
+      return Err(ImageDataErrors::BufferTooSmall);
+    }
+    self.data = data;
+    Ok(())
+  }
+}
+```
+
+O enum precisa ser estendido para incluir a nova variante de unidade <b>BufferTooSmall</b>:
+
+```rs
+enum ImageDataErrors {
+  // ...
+  BufferTooSmall,
+}
+```
+
+Aviso: O método ainda é chamado apenas com um argumento:
+
+```rs
+fn main() -> Result<(), ImageDataErrors> {
+  // ...
+  output.set_data(combined_data)?;
+  Ok(())
+}
+```
+
+O <b>?</b> sintaxe no final de uma expressão é uma forma abreviada de lidar com o resultado de uma chamada de função. Se a chamada de função retornar um erro, o operador de propagação de erro retornará o erro da chamada de função.
