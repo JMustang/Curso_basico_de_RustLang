@@ -813,3 +813,76 @@ image = "0.23.14"
 ```
 
 Agora, quando o <b>cargo</b> for chamada, Cargo irá buscar e instalar a <b>crate</b> <b>image</b>.
+
+---
+
+#### Passo 5 – Ler um arquivo de imagem
+
+A <b>crate</b> de <b>image</b> vem com um módulo <b>io</b> incluindo uma estrutura <b>Reader</b>. Essa estrutura implementa uma função <b>open</b> que leva um caminho para um arquivo de imagem e retorna um <b>Result</b> contendo um leitor. Você pode formatar e decodificar este leitor para produzir o formato da imagem <b>(por exemplo, PNG, JGP e assim por diante)</b> e os dados da imagem.
+Crie uma função chamada <b>find_image_from_path</b> para abrir o arquivo de imagem a partir de um argumento de <b>path</b>:
+
+<b>EX:</b>
+
+```rs
+fn find_image_from_path(path: String) -> (DynamicImage, ImageFormat) {
+  let image_reader: Reader<BufReader<File>> = Reader::open(path).unwrap();
+  let image_format: ImageFormat = image_reader.format().unwrap();
+  let image: DynamicImage = image_reader.decode().unwrap();
+  (image, image_format)
+}
+```
+
+As variaveis <b>image</b> e <b>image_format</b> iram retorna uma <b>tupla</b>.
+
+Inclua os <b>imports</b> necessários:
+
+```rs
+use image::{ io::Reader, DynamicImage, ImageFormat };
+
+fn main() {
+  // ...
+  let (image_1, image_1_format) = find_image_from_path(args.image_1);
+  let (image_2, image_2_format) = find_image_from_path(args.image_2);
+}
+```
+
+Dentro de <b>main</b>, a tupla retornada pode ser desestruturada em duas novas variáveis ​​para cada caminho de imagem.
+
+---
+
+#### Passo 6 – Lidar com Erros com Result
+
+É importante ser capaz de lidar com os erros que surgem. Por exemplo, você pode ter um caso em que duas imagens de formatos diferentes são fornecidas como argumentos para combinar.
+
+Uma maneira semântica de lidar com esse erro é retornar um <b>Result</b> que pode consistir em um <b>Ok</b> ou um <b>Err</b>.
+
+<b>EX:</b>
+
+```rs
+fn main() -> Result<(), ImageDataErrors> {
+  let args = Args::new();
+  println!("{:?}", args);
+
+  let (image_1, image_1_format) = find_image_from_path(args.image_1);
+  let (image_2, image_2_format) = find_image_from_path(args.image_2);
+
+  if image_1_format != image_2_format {
+    return Err(ImageDataErrors::DifferentImageFormats);
+  }
+  Ok(())
+}
+```
+
+A função <b>main</b> retorna um <b>Err</b> contendo uma enum com a variante de unidade <b>DifferentImageFormats</b> se os dois formatos de imagem não forem iguais. Caso contrário, retorna um <b>Ok</b> com uma <b>tupla</b> vazia.
+
+O enum é definido como:
+
+<b>EX:</b>
+
+```rs
+enum ImageDataErrors {
+  DifferentImageFormats,
+}
+```
+
+---
