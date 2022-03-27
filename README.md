@@ -886,3 +886,103 @@ enum ImageDataErrors {
 ```
 
 ---
+
+#### Passo 7 – Redimensione as imagens para combinar
+
+Para facilitar a combinação das imagens, você redimensiona a imagem maior para corresponder à imagem menor.
+
+Primeiro, você pode encontrar a menor imagem usando o método de <b>dimensions</b> que retorna a largura e a altura da imagem como uma tupla. Essas tuplas podem ser comparadas e a menor retornada:
+
+<b>EX:</b>
+
+```rs
+fn get_smallest_dimensions(dim_1: (u32, u32), dim_2: (u32, u32)) -> (u32, u32) {
+  let pix_1 = dim_1.0 * dim_1.1;
+  let pix_2 = dim_2.0 * dim_2.1;
+  return if pix_1 < pix_2 { dim_1 } else { dim_2 };
+}
+```
+
+Os valores da tupla são acessados ​​usando notação de ponto da indexação baseada em zero.
+
+Se a <b>imagem_2</b> for a menor imagem, a <b>imagem_1</b> precisará ser redimensionada para corresponder às menores dimensões. Caso contrário, <b>image_2</b> precisa ser redimensionado.
+
+<b>EX:</b>
+
+```rs
+fn standardise_size(image_1: DynamicImage, image_2: DynamicImage) -> (DynamicImage, DynamicImage) {
+  let (width, height) = get_smallest_dimensions(image_1.dimensions(), image_2.dimensions());
+  println!("width: {}, height: {}\n", width, height);
+
+  if image_2.dimensions() == (width, height) {
+    (image_1.resize_exact(width, height, Triangle), image_2)
+  } else {
+    (image_1, image_2.resize_exact(width, height, Triangle))
+  }
+}
+```
+
+O método <b>resize_exact</b> implementado na estrutura <b>DynamicImage</b> empresta a imagem de forma mutável e, usando os argumentos <b>width</b>, <b>height</b> e <b>FilterType</b>, redimensiona a imagem.
+
+Usando o retorno da função <b>standardise_size</b>, você pode redeclarar as variáveis <b>​​image_1</b> e <b>​​image_2</b>:
+
+```rs
+use image::{ io::Reader, DynamicImage, ImageFormat, imageops::FilterType::Triangle };
+
+fn main() -> Result<(), ImageDataErrors> {
+  // ...
+  let (image_1, image_2) = standardise_size(image_1, image_2);
+  Ok(())
+}
+```
+
+---
+
+#### Passo 8 – Crie uma imagem Floating
+
+Para manipular a saída, crie uma estrutura temporária para conter os metadados da imagem de saída.
+
+Defina um struct chamado <b>FloatingImage</b> para conter a <b>width</b>, <b>height</b> e a  data da imagem, bem como o <b>name</b> do arquivo de saída:
+
+```rs
+struct FloatingImage {
+  width: u32,
+  height: u32,
+  data: Vec<u8>,
+  name: String,
+}
+```
+
+Em seguida, implemente uma nova função para <b>FloatingImage</b> que recebe valores para <b>width</b>, <b>height</b> e <b>name</b> da imagem de saída:
+
+```rs
+impl FloatingImage {
+  fn new(width: u32, height: u32, name: String) -> Self {
+    let buffer_capacity = 3_655_744;
+    let buffer: Vec<u8> = Vec::with_capacity(buffer_capacity);
+    FloatingImage {
+      width,
+      height,
+      data: buffer,
+      name,
+    }
+  }
+}
+```
+
+Como você ainda não criou os dados para a imagem, crie um buffer na forma de um <b>Vec</b> de <b>u8s</b> com capacidade de <b>3.655.744 (956 x 956 x 4)</b>. A sintaxe ```<number>_<number>``` é a numeração de fácil leitura do <b>Rust</b> que separa o número em grupos ou três dígitos.
+Use os valores de <b>width</b> e <b>height</b> da variável <b>image_1</b> para criar uma instância da <b>FloatingImage</b> e use o terceiro argumento armazenado em <b>args</b> para definir o nome da <b>FloatingImage</b>:
+
+<b>EX:</b>
+
+```rs
+fn main() -> Result<(), ImageDataErrors> {
+  // ...
+  let mut output = FloatingImage::new(image_1.width(), image_1.height(), args.output);
+  Ok(())
+}
+```
+
+Desclare as variaveis de saida como mutáveis para que você possa manipular os campos de dados posteriormente.
+
+---
